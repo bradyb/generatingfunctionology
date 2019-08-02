@@ -14,12 +14,12 @@ class PolynomialSequence:
         init_printing()
         self.x = Symbol('x')
         self.f_sym_list = f.atoms(Symbol)
-        if len(self.f_sym_list)) != 1:
+        if len(self.f_sym_list) != 1:
             raise ValueError('Unsupported expresssion.')
         elif self.x in self.f_sym_list:
             raise ValueError('Use a different Symbol')
         self.f = f
-        self.f_sym = self.f_sym_list[0]
+        (self.f_sym,) = self.f_sym_list
 
     def FindGenFunction(self):
         poly_f = Poly(self.f, self.f_sym)
@@ -28,15 +28,19 @@ class PolynomialSequence:
 
         gen_function = Poly(0, self.x)
         for index, coeff in enumerate(coeffs):
-            if coeff = 0:
+            if coeff == 0:
                 continue
 
             term_degree = degree - index
-            geo_sum = 1 / (1 - x)
+            geo_sum = 1 / (1 - self.x)
             for _ in range(0, term_degree):
-                geo_sum = x * diff(geo_sum,, x)
+                geo_sum = self.x * diff(geo_sum, self.x)
 
             gen_function += coeff * geo_sum
 
         return gen_function
 
+n = Symbol('n')
+f = n**2 + n + 4
+ps = PolynomialSequence(f)
+pprint(ps.FindGenFunction(), use_unicode=False)
